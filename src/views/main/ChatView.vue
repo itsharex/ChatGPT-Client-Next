@@ -189,10 +189,6 @@ const placeholder = computed(() => {
       </a-typography-paragraph>
     </div>
     <i class="flex-1" v-if="!isMobileScreen"></i>
-    <a-input-group v-if="!isMobileScreen">
-      <ChangeChatModel class="w-44" />
-      <SetupCard class="w-60" />
-    </a-input-group>
   </a-layout-header>
   <a-divider class="m-0" />
   <a-layout-content class="flex flex-col flex-1 overflow-hidden">

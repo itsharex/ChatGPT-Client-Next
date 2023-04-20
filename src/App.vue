@@ -2,7 +2,6 @@
 import { Message } from '@arco-design/web-vue'
 import type { RouterLink } from 'vue-router'
 
-import userAvatar from '@/assets/userAvatars/user_avatar_36.webp'
 import { useLayoutStore } from '@/store/layout'
 
 import ContactModel from './components/ContactModel.vue'
@@ -78,17 +77,24 @@ const handleToRouter = (path: string) => {
         </a-menu-item>
       </a-menu>
       <i class="flex-1"></i>
+      <a-input-group v-if="!isMobileScreen" class="mr-2">
+        <ChangeChatModel class="w-44 mr-2" />
+        <SetupCard class="w-60" />
+      </a-input-group>
       <a-popover
         trigger="click"
         v-model:popup-visible="popupVisible"
         content-class="mr-2"
       >
-        <a-avatar
+        <!-- <a-avatar
           :image-url="userAvatar"
           :size="32"
           :style="{ backgroundColor: '#14C9C9' }"
         >
-        </a-avatar>
+        </a-avatar> -->
+        <a-button>
+          <icon-more />
+        </a-button>
         <template #content>
           <PointsCard
             v-if="route.name !== 'Chat' || isMobileScreen"
