@@ -22,7 +22,7 @@ export function useCopyCode() {
       }
     })
   }
-
+  copyCodeBlock()
   onMounted(() => copyCodeBlock())
 
   onUpdated(() => copyCodeBlock())

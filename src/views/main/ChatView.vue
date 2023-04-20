@@ -25,26 +25,30 @@ const currentTitle = ref('新的聊天')
 watchEffect(() => {
   currentTitle.value = chatStore.session?.topic || '新的聊天'
 })
+watch(
+  () => chatStore.currentChat,
+  () => {
+    nextTick(() => {
+      scrollbarRef.value?.scrollTop(
+        (scrollbarRef.value?.containerRef?.scrollHeight ?? 0) - 200
+      )
+    })
+  }
+)
+
 const message = ref('')
 
 const handleRetry = (index: number) => {
   userWheel.value = false
-  chatStore.messageRetryAction(
-    index,
-    () => {
-      if (!userWheel.value) {
-        scrollbarRef.value?.scrollTop(
-          (scrollbarRef.value?.containerRef?.scrollHeight ?? 0) - 200
-        )
-      }
-    },
-    ctl => {
-      abortController.value = ctl
+  chatStore.messageRetryAction(index, () => {
+    if (!userWheel.value) {
+      scrollbarRef.value?.scrollTop(
+        (scrollbarRef.value?.containerRef?.scrollHeight ?? 0) - 200
+      )
     }
-  )
+  })
 }
 
-const abortController = ref<AbortController>()
 const handleSendMessage = () => {
   if (isAllWhitespace(message.value)) {
     Message.clear()
@@ -53,19 +57,18 @@ const handleSendMessage = () => {
   }
 
   userWheel.value = false
-  chatStore.sendMessageAction(
-    message.value,
-    () => {
-      if (!userWheel.value) {
-        scrollbarRef.value?.scrollTop(
-          (scrollbarRef.value?.containerRef?.scrollHeight ?? 0) - 200
-        )
-      }
-    },
-    ctl => {
-      abortController.value = ctl
+  chatStore.sendMessageAction(message.value, (done: boolean) => {
+    if (!userWheel.value) {
+      scrollbarRef.value?.scrollTop(
+        (scrollbarRef.value?.containerRef?.scrollHeight ?? 0) - 200
+      )
     }
-  )
+    if (done) {
+      nextTick(() => {
+        useCopyCode()
+      })
+    }
+  })
   message.value = ''
 }
 
@@ -98,6 +101,10 @@ const handleScrollbarScroll = (evt: any) => {
 }
 
 onUnmounted(() => {
+  if (chatStore.abortController?.abort) {
+    chatStore.abortController?.abort()
+  }
+
   scrollbarRef.value?.$el
     .querySelector('.arco-scrollbar-container')
     .removeEventListener('wheel', handleListenerUserWheel)
@@ -203,18 +210,29 @@ const placeholder = computed(() => {
           v-for="(item, index) in session?.messages ?? []"
           :key="item.id"
           class="message-item"
-          :class="[item.role === 'assistant' ? 'is-reply' : 'is-request']"
+          :class="[
+            item.role === 'assistant' ? 'is-reply' : 'is-request',
+            isMobileScreen ? 'max-w-full' : 'max-w-4/5'
+          ]"
         >
-          <a-spin :loading="item.streaming && item.role === 'assistant'">
-            <a-avatar
-              :size="32"
-              :class="
-                item.role === 'assistant' ? 'bg-primary p-2' : 'bg-success'
-              "
-            >
-              <img :src="avatar[item.role] ?? ''" />
-            </a-avatar>
-          </a-spin>
+          <div
+            class="flex items-center gap-x-4"
+            :class="{ 'flex-row-reverse': item.role !== 'assistant' }"
+          >
+            <a-spin :loading="item.streaming && item.role === 'assistant'">
+              <a-avatar
+                :size="32"
+                :class="
+                  item.role === 'assistant' ? 'bg-primary p-2' : 'bg-success'
+                "
+              >
+                <img :src="avatar[item.role] ?? ''" />
+              </a-avatar>
+            </a-spin>
+            <small v-date-time="item.date" class="date-time">
+              {{ item.date }}
+            </small>
+          </div>
           <small
             v-if="item.streaming && item.role === 'assistant'"
             class="text-info"
@@ -267,7 +285,7 @@ const placeholder = computed(() => {
           <template #icon> </template>
         </a-spin> -->
         <a-button
-          @click="abortController?.abort()"
+          @click="chatStore.abortController?.abort()"
           shape="round"
           status="danger"
           v-if="chatStore.fetching"
@@ -319,7 +337,6 @@ const placeholder = computed(() => {
   @apply flex-1 flex flex-col overflow-hidden;
   .message-item {
     @apply flex flex-col items-start justify-items-start gap-2 pl-0;
-    max-width: 75%;
     &.is-reply {
       // @apply pr-10;
     }
@@ -327,7 +344,7 @@ const placeholder = computed(() => {
       @apply items-end pl-10 max-w-max ml-auto;
     }
     .message-item__content {
-      @apply relative flex flex-col px-4 py-3 text-sm rounded-lg max-w-max;
+      @apply relative flex flex-col px-4 py-3 text-sm rounded-lg max-w-full min-w-72;
       &.is-user {
         @apply justify-end bg-primary text-white;
       }
@@ -351,5 +368,8 @@ const placeholder = computed(() => {
   .stop-receiving {
     @apply absolute -top-12;
   }
+}
+.date-time {
+  color: rgb(var(--gray-8));
 }
 </style>

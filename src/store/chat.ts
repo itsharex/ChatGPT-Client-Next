@@ -1,4 +1,4 @@
-import { Modal } from '@arco-design/web-vue'
+import { Message, Modal } from '@arco-design/web-vue'
 import { encode } from 'gpt-token-utils'
 import { cloneDeep } from 'lodash-es'
 import { defineStore } from 'pinia'
@@ -14,6 +14,7 @@ export const useChatStore = defineStore(
   '__AI_1024_STORE_CHAT',
   () => {
     const configStore = useConfigStore()
+    const abortController = ref<AbortController>(new AbortController())
     const newChat: ChatItem = {
       id: genNonDuplicateID(),
       topic: '',
@@ -33,6 +34,9 @@ export const useChatStore = defineStore(
 
     /** 新加一个聊天 */
     const newChatAction = () => {
+      if (abortController.value?.abort) {
+        abortController.value?.abort()
+      }
       const id = genNonDuplicateID()
       sessions.value.unshift(
         cloneDeep({
@@ -46,6 +50,9 @@ export const useChatStore = defineStore(
 
     /** 清除会话 */
     const clearSessions = () => {
+      if (abortController.value?.abort) {
+        abortController.value?.abort()
+      }
       Modal.warning({
         title: '操作提示',
         hideCancel: false,
@@ -60,6 +67,9 @@ export const useChatStore = defineStore(
 
     /** 选中聊天 */
     const changeCurrentChatAction = (id: string) => {
+      if (abortController.value?.abort) {
+        abortController.value?.abort()
+      }
       currentChat.value = id
     }
 
@@ -81,6 +91,9 @@ export const useChatStore = defineStore(
                 sessions.value[index === 0 ? index + 1 : index - 1].id
             }
             sessions.value.splice(index, 1)
+            if (abortController.value?.abort) {
+              abortController.value?.abort()
+            }
             if (sessions.value.length === 0) {
               newChatAction()
             }
@@ -128,13 +141,18 @@ export const useChatStore = defineStore(
     /** 发送消息 */
     const sendMessageAction = (
       content: string,
-      onMessage?: () => void,
-      onController?: (controller: AbortController) => void,
+      onMessage?: (done: boolean) => void,
       appendUserMessage: boolean = true
     ) => {
+      const messages = getRequiredMessages({ role: 'user', content })
+      if (messages.length < 0) {
+        const maxTokens = ALL_MODELS_MAX_TOKENS[configStore.chatModel] || 2049
+        Message.error(`消息超出token限制: ${maxTokens}`)
+        return
+      }
       const reqData: MessageModel = {
         card: configStore.card,
-        messages: getRequiredMessages({ role: 'user', content }),
+        messages,
         model: configStore.chatModel,
         is_stream: true
       }
@@ -154,10 +172,12 @@ export const useChatStore = defineStore(
 
       fetching.value = true
       requestChatStream(reqData, {
-        onController,
+        onController(ctl) {
+          abortController.value = ctl
+        },
         onMessage(message: string, done: boolean) {
           getMessageById(botMessage.id).content = message
-          onMessage && onMessage()
+          onMessage && onMessage(done)
           if (done) {
             fetching.value = false
             getMessageById(botMessage.id).streaming = false
@@ -184,19 +204,15 @@ export const useChatStore = defineStore(
           // userMessage.isError = true
           getMessageById(botMessage.id).isError = true
           getMessageById(botMessage.id).date = new Date().valueOf()
-          onMessage && onMessage()
+          onMessage && onMessage(true)
         }
       })
     }
 
-    const messageRetryAction = (
-      index: number,
-      onMessage: () => void,
-      onController: (controller: AbortController) => void
-    ) => {
+    const messageRetryAction = (index: number, onMessage: () => void) => {
       session.value?.messages.splice(index, 1)
       const message = session.value?.messages[index - 1]
-      sendMessageAction(message?.content || '', onMessage, onController, false)
+      sendMessageAction(message?.content || '', onMessage, false)
     }
 
     /** 初始化判断是否有聊天, 没有创建一个空的 */
@@ -211,6 +227,7 @@ export const useChatStore = defineStore(
       sessions,
       fetching,
       currentChat,
+      abortController,
       newChatAction,
       clearSessions,
       removeChatAction,
