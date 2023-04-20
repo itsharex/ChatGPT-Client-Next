@@ -151,7 +151,7 @@ export const useChatStore = defineStore(
         return
       }
       const reqData: MessageModel = {
-        card: configStore.card,
+        card: configStore.cardInfo?.enable ? configStore.card : undefined,
         messages,
         model: configStore.chatModel,
         is_stream: true
