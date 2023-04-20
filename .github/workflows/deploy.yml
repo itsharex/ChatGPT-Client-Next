@@ -1,0 +1,46 @@
+name: deploy
+
+on:
+  push:
+    # main 分支有 push 时触发
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses:
+          actions/checkout@v3
+          # 设置 pnpm。指定版本8.0，不然会报错
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2.2.1
+        with:
+          version: ^8.0
+
+      - name: Setup Node.js v18.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: "18.x"
+
+      - name: Install
+        # 安装依赖
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build
+        run:
+          pnpm build
+          # 打包
+
+      - name: Deploy
+        # 使用部署到 GitHub pages 的 action
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          # 部署打包后的 dist 目录
+          publish_dir: ./dist
+          # secret 名
+          github_token: ${{ secrets.CHAT_GPT_CLIENT_NEXT }}
+          user_name: ${{ secrets.MY_USER_NAME }}
+          user_email: ${{ secrets.MY_USER_EMAIL }}
+          # 部署时的 git 提交信息，自由填写
+          commit_message: "👷ci(build): rebuild"

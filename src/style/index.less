@@ -1,0 +1,88 @@
+@import url('./lib/github-markdown.less');
+@import url('./lib/highlight.less');
+@import url('@arco-design/web-vue/es/index.less');
+* {
+  box-sizing: border-box;
+}
+.shadow {
+  box-shadow: 0 0 40px -18px rgba(0, 0, 0, 0.45) !important;
+}
+:root {
+  -webkit-tap-highlight-color: transparent;
+}
+html,
+body,
+#app {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+a {
+  @apply text-primary no-underline;
+  &:hover {
+    @apply text-opacity-75;
+  }
+}
+mark {
+  @apply text-primary bg-primary bg-opacity-25 px-1 rounded;
+}
+
+.header-logo {
+  @apply flex items-center text-primary w-72 no-underline;
+  &.is-mobile {
+    @apply w-auto mx-2;
+  }
+}
+
+.editable-title__wrapper {
+  .arco-typography-edit-content {
+    @apply relative left-0 m-0 w-80;
+  }
+  &.is-mobile {
+    @apply w-full;
+    .arco-typography-edit-content {
+      @apply w-full;
+    }
+  }
+}
+
+.settings-drawer {
+  .arco-btn-primary {
+    display: none;
+  }
+}
+
+.message-drawer {
+  .arco-drawer-body {
+    @apply dark:bg-dark;
+    .chat-message_list {
+      @apply shadow-none w-full h-full;
+    }
+  }
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  /*定义进入开始和离开结束的透明度为0*/
+  opacity: 0;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  /*定义进入结束和离开开始的透明度为1*/
+  opacity: 1;
+}
+.fade-leave-active,
+.fade-enter-active {
+  transition: all 0.2s linear;
+}
+
+.arco-divider-horizontal,
+.arco-divider-vertical {
+  border-color: var(--color-neutral-2) !important;
+}
