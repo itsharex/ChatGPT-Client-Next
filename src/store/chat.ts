@@ -125,6 +125,7 @@ export const useChatStore = defineStore(
       try {
         messages.reverse().forEach(item => {
           const tokens = encode(item.content).length
+          console.log(tokens)
           if (tokens < maxTokens && sum < maxTokens) {
             sum += tokens
             res.push(item as MessageItem)
@@ -145,7 +146,7 @@ export const useChatStore = defineStore(
       appendUserMessage: boolean = true
     ) => {
       const messages = getRequiredMessages({ role: 'user', content })
-      if (messages.length < 0) {
+      if (messages.length <= 0) {
         const maxTokens = ALL_MODELS_MAX_TOKENS[configStore.chatModel] || 2049
         Message.error(`消息超出token限制: ${maxTokens}`)
         return
