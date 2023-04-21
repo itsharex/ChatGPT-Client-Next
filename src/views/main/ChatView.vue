@@ -186,7 +186,9 @@ const placeholder = computed(() => {
 </script>
 
 <template>
-  <a-layout-header class="h-14 px-4 flex items-center bg-white dark:bg-dark">
+  <a-layout-header
+    class="h-14 px-4 flex items-center gap-x-3 bg-white dark:bg-dark"
+  >
     <div
       class="flex flex-col editable-title__wrapper"
       :class="{ 'is-mobile': isMobileScreen }"
@@ -201,6 +203,7 @@ const placeholder = computed(() => {
       </a-typography-paragraph>
     </div>
     <i class="flex-1" v-if="!isMobileScreen"></i>
+    <!-- <DownloadSession></DownloadSession> -->
   </a-layout-header>
   <a-divider class="m-0" />
   <a-layout-content class="flex flex-col flex-1 overflow-hidden">

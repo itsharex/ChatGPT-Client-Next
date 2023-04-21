@@ -123,12 +123,14 @@ export const useChatStore = defineStore(
       )
       let sum = 0
       try {
-        messages.reverse().forEach(item => {
+        messages.reverse().forEach((item, i) => {
           const tokens = encode(item.content).length
-          console.log(tokens)
-          if (tokens < maxTokens && sum < maxTokens) {
+          if (tokens < maxTokens && sum + tokens < maxTokens) {
             sum += tokens
             res.push(item as MessageItem)
+            // console.log(
+            //   `当前聊天: ${item.content}, tokens: ${tokens}, sum: ${sum}`
+            // )
           } else {
             throw new Error('')
           }
@@ -136,6 +138,7 @@ export const useChatStore = defineStore(
       } catch (_) {
         //
       }
+      console.log('最终Sum: ', sum)
       return res.reverse()
     }
 

@@ -50,6 +50,7 @@ declare module '@vue/runtime-core' {
     ChangeChatModel: typeof import('./../src/components/ChangeChatModel.vue')['default']
     ChangeSessionTopic: typeof import('./../src/components/ChangeSessionTopic.vue')['default']
     ContactModel: typeof import('./../src/components/ContactModel.vue')['default']
+    DownloadSession: typeof import('./../src/components/DownloadSession.vue')['default']
     MessageContent: typeof import('./../src/components/MessageContent.vue')['default']
     PointsCard: typeof import('./../src/components/PointsCard.vue')['default']
     ReceivingWidget: typeof import('./../src/components/ReceivingWidget.vue')['default']
