@@ -44,5 +44,6 @@
     "traptitech",
     "webps",
     "Windi"
-  ]
+  ],
+  "vue.features.codeActions.enable": false
 }

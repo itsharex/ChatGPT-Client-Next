@@ -61,13 +61,13 @@
       >
         开启GPT互动
       </a-button>
-      <a-button
+      <!-- <a-button
         type="outline"
         shape="round"
         @click="$router.push({ name: 'Tools' })"
       >
         AI实用工具箱
-      </a-button>
+      </a-button> -->
     </div>
   </a-scrollbar>
 </template>

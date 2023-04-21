@@ -129,12 +129,13 @@ const handleEnter = (event: KeyboardEvent) => {
       event.preventDefault()
       handleSendMessage()
     }
-  } else {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      handleSendMessage()
-    }
   }
+  //  else {
+  //   if (event.key === 'Enter') {
+  //     event.preventDefault()
+  //     handleSendMessage()
+  //   }
+  // }
   // if (event.shiftKey && event.code === 'Enter') {
   //   event.preventDefault()
   //   message.value.s
@@ -172,11 +173,15 @@ const handleCopyMessage = (value: string) => {
 }
 
 const placeholder = computed(() => {
-  return `请输入您的消息，${configStore.submitKey} 发送，${
-    configStore.submitKey === SubmitKey.Enter
-      ? SubmitKey.ShiftEnter
-      : SubmitKey.Enter
-  } 换行`
+  let res = '请输入您的消息'
+  if (!isMobileScreen.value) {
+    res += `，${configStore.submitKey} 发送，${
+      configStore.submitKey === SubmitKey.Enter
+        ? SubmitKey.ShiftEnter
+        : SubmitKey.Enter
+    } 换行`
+  }
+  return res
 })
 </script>
 
@@ -298,35 +303,18 @@ const placeholder = computed(() => {
           v-model="message"
           @keypress="handleEnter"
           class="bg-white dark:bg-dark-900 border-none"
-          :auto-size="{ minRows: 4, maxRows: 6 }"
+          :auto-size="{ minRows: isMobileScreen ? 1 : 3, maxRows: 6 }"
           :placeholder="placeholder"
         />
-        <!-- <a-dropdown-button
+        <a-button
+          size="medium"
+          class="rounded text-xs"
+          v-if="isMobileScreen && message.trim().length > 0"
           @click="handleSendMessage"
-          @select="handleSubmitChange"
           type="primary"
         >
-          <icon-send class="mr-2" />
           发送
-          <template #icon>
-            <icon-down />
-          </template>
-          <template #content>
-            <a-doption
-              v-for="item in Object.values(SubmitKey)"
-              :key="item"
-              :value="item"
-            >
-              <div class="flex items-center gap-x-2 w-32">
-                <span class="flex-1"> {{ item }}</span>
-                <icon-check
-                  v-if="item === configStore.submitKey"
-                  class="text-primary"
-                />
-              </div>
-            </a-doption>
-          </template>
-        </a-dropdown-button> -->
+        </a-button>
       </footer>
     </main>
   </a-layout-content>
@@ -334,7 +322,7 @@ const placeholder = computed(() => {
 
 <style lang="less">
 .chat-wrapper {
-  @apply flex-1 flex flex-col overflow-hidden;
+  @apply h-full flex-1 flex flex-col overflow-hidden;
   .message-item {
     @apply flex flex-col items-start justify-items-start gap-2 pl-0;
     &.is-reply {
@@ -363,10 +351,10 @@ const placeholder = computed(() => {
   }
 }
 .chat-footer {
-  @apply relative w-full flex flex-col items-center bg-white dark:bg-dark-900 pl-2 pr-4 justify-end pt-3 pb-2;
+  @apply relative w-full flex items-end bg-white dark:bg-dark-900 pl-2 pr-4 justify-end pt-3 pb-2;
 
   .stop-receiving {
-    @apply absolute -top-12;
+    @apply absolute -top-12 left-1/2 transform -translate-x-1/2;
   }
 }
 .date-time {

@@ -145,8 +145,12 @@ export const useChatStore = defineStore(
       onMessage?: (done: boolean) => void,
       appendUserMessage: boolean = true
     ) => {
+      if (!content?.length) {
+        Message.error('请输入您的消息')
+        return
+      }
       const messages = getRequiredMessages({ role: 'user', content })
-      if (messages.length <= 0) {
+      if (messages.length < 1) {
         const maxTokens = ALL_MODELS_MAX_TOKENS[configStore.chatModel] || 2049
         Message.error(`消息超出token限制: ${maxTokens}`)
         return

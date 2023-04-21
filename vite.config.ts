@@ -7,6 +7,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { ArcoResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig, loadEnv } from 'vite'
+import { qrcode } from 'vite-plugin-qrcode'
 import WindiCSS from 'vite-plugin-windicss'
 
 // https://vitejs.dev/config/
@@ -17,6 +18,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       vueJsx(),
+      qrcode(),
       legacy({
         targets: ['defaults', 'not IE 11']
       }),
