@@ -155,25 +155,12 @@ export const useChatStore = defineStore(
       const resMessages = sum < 1 ? messages : res
       // 如果> 40条消息 截断
       if (resMessages.length > 20) {
-        return resMessages.splice(0, 20)
+        return resMessages.splice(0, 20).reverse()
       }
       // 翻转数据  需要将最新的方法 最后
       return resMessages.reverse()
     }
 
-    async function report(data: any) {
-      const path = `${configStore.bootstrap.api}${CHAT_TELESCOPE}`
-
-      fetch(path, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ s: data })
-      }).catch(() => {
-        //
-      })
-    }
     /** 发送消息 */
     const sendMessageAction = (
       content: string,

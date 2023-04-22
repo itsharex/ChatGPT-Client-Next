@@ -9,6 +9,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AAlert: typeof import('@arco-design/web-vue')['Alert']
     AAvatar: typeof import('@arco-design/web-vue')['Avatar']
     ABadge: typeof import('@arco-design/web-vue')['Badge']
     ABreadcrumb: typeof import('@arco-design/web-vue')['Breadcrumb']
@@ -16,6 +17,8 @@ declare module '@vue/runtime-core' {
     AButton: typeof import('@arco-design/web-vue')['Button']
     AButtonGroup: typeof import('@arco-design/web-vue')['ButtonGroup']
     ACard: typeof import('@arco-design/web-vue')['Card']
+    ACarousel: typeof import('@arco-design/web-vue')['Carousel']
+    ACarouselItem: typeof import('@arco-design/web-vue')['CarouselItem']
     ADescriptions: typeof import('@arco-design/web-vue')['Descriptions']
     ADescriptionsItem: typeof import('@arco-design/web-vue')['DescriptionsItem']
     ADivider: typeof import('@arco-design/web-vue')['Divider']
@@ -25,6 +28,7 @@ declare module '@vue/runtime-core' {
     AInput: typeof import('@arco-design/web-vue')['Input']
     AInputGroup: typeof import('@arco-design/web-vue')['InputGroup']
     AInputNumber: typeof import('@arco-design/web-vue')['InputNumber']
+    AInputSearch: typeof import('@arco-design/web-vue')['InputSearch']
     ALayout: typeof import('@arco-design/web-vue')['Layout']
     ALayoutContent: typeof import('@arco-design/web-vue')['LayoutContent']
     ALayoutHeader: typeof import('@arco-design/web-vue')['LayoutHeader']
@@ -42,9 +46,11 @@ declare module '@vue/runtime-core' {
     ASelect: typeof import('@arco-design/web-vue')['Select']
     ASlider: typeof import('@arco-design/web-vue')['Slider']
     ASpin: typeof import('@arco-design/web-vue')['Spin']
+    ATag: typeof import('@arco-design/web-vue')['Tag']
     ATextarea: typeof import('@arco-design/web-vue')['Textarea']
     ATooltip: typeof import('@arco-design/web-vue')['Tooltip']
     ATypographyParagraph: typeof import('@arco-design/web-vue')['TypographyParagraph']
+    ATypographyText: typeof import('@arco-design/web-vue')['TypographyText']
     ChangeChatModel: typeof import('./../src/components/ChangeChatModel.vue')['default']
     ChangeSessionTopic: typeof import('./../src/components/ChangeSessionTopic.vue')['default']
     ContactModel: typeof import('./../src/components/ContactModel.vue')['default']
