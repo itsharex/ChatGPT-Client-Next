@@ -56,7 +56,7 @@ const handleCopy = () => {
     <div class="break-words break-all whitespace-pre-wrap">
       <message-content
         as-raw-text
-        class="p-3 bg-[#fafafa]"
+        class="p-3 bg-[#fafafa] w-full hljs"
         :text="rawValue"
       ></message-content>
     </div>

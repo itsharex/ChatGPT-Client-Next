@@ -203,7 +203,7 @@ const placeholder = computed(() => {
       </a-typography-paragraph>
     </div>
     <i class="flex-1" v-if="!isMobileScreen"></i>
-    <DownloadSession></DownloadSession>
+    <DownloadSession v-if="session?.messages?.length"></DownloadSession>
   </a-layout-header>
   <a-divider class="m-0" />
   <a-layout-content class="flex flex-col flex-1 overflow-hidden">
