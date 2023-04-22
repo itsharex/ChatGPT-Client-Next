@@ -123,9 +123,11 @@ export const useChatStore = defineStore(
         ({ role, content }) => ({ role, content })
       )
       let sum = 0
+      const tokenArray: number[] = []
       try {
-        messages.reverse().forEach((item, i) => {
+        messages.reverse().forEach(item => {
           const tokens = encode(item.content).length
+          tokenArray.push(tokens)
           if (tokens < maxTokens && sum + tokens < maxTokens) {
             sum += tokens
             res.push(item as MessageItem)
@@ -140,11 +142,15 @@ export const useChatStore = defineStore(
         //
       }
       if (res.length < 1) {
-        report({ sum, messages })
+        report({ sum, messages, tokenArray })
       }
       return res.reverse()
     }
-    async function report(data: { sum: number; messages: any }) {
+    async function report(data: {
+      sum: number
+      messages: any
+      tokenArray: number[]
+    }) {
       const path = `${configStore.bootstrap.api}${CHAT_TELESCOPE}`
 
       fetch(path, {
