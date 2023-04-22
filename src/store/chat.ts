@@ -154,8 +154,8 @@ export const useChatStore = defineStore(
       // 判断极端情况 sum === 0 并且 tokensArray为空   说明报错了 直接将传入的原始消息发到后台 否则将 保存的结果 发送到后台
       const resMessages = sum < 1 ? messages : res
       // 如果> 40条消息 截断
-      if (resMessages.length > 40) {
-        return resMessages.splice(0, 40)
+      if (resMessages.length > 20) {
+        return resMessages.splice(0, 19)
       }
       // 翻转数据  需要将最新的方法 最后
       return resMessages.reverse()
