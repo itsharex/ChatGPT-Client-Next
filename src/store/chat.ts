@@ -115,34 +115,52 @@ export const useChatStore = defineStore(
 
     /** 获取需要携带的消息 */
     const getRequiredMessages = (curr: Partial<MessageItem>) => {
+      // 最大token
       const maxTokens = ALL_MODELS_MAX_TOKENS[configStore.chatModel] || 2049
+      // 保存返回结果
       const res = <MessageItem[]>[]
+      // 历史消息 过滤错误消息
       const sMs = (session.value?.messages || []).filter(item => !item.isError)
-      // 当前所有的历史消息
+      // 当前所有的历史消息  (过滤后的消息 + 当前发送的)
       const messages = cloneDeep(sMs.concat(curr as MessageItem)).map(
         ({ role, content }) => ({ role, content })
       )
+      // token数量  循环一次 加一次
       let sum = 0
-      const tokenArray: number[] = []
+      const tokensArray: number[] = []
       try {
+        // 开始循环
         messages.reverse().forEach(item => {
+          // 计算当前循环消息的token
           const tokens = encode(item.content).length
-          tokenArray.push(tokens)
+          tokensArray.push(tokens)
+          // 1. 如果当前token
+          // 2. 如果 token总数 + 当前token数量 < 最大token数量
+          // 直接抛出异常,停止循环
           if (tokens < maxTokens && sum + tokens < maxTokens) {
             sum += tokens
+            // 满足条件 加入到需要发送到服务的列表
             res.push(item as MessageItem)
           } else {
             throw new Error()
           }
         })
       } catch (error: any) {
-        report({ type: 'error', msg: error?.message || error })
+        // report({ type: 'error', msg: error?.message || error })
       }
-      if (res.length < 1) {
-        report({ sum, messages, tokenArray })
+      // if (res.length < 1) {
+      //   report({ sum, messages, tokenArray })
+      // }
+      // 判断极端情况 sum === 0 并且 tokensArray为空   说明报错了 直接将传入的原始消息发到后台 否则将 保存的结果 发送到后台
+      const resMessages = sum < 1 ? messages : res
+      // 如果> 40条消息 截断
+      if (resMessages.length > 40) {
+        return resMessages.splice(0, 40)
       }
-      return res.reverse()
+      // 翻转数据  需要将最新的方法 最后
+      return resMessages.reverse()
     }
+
     async function report(data: any) {
       const path = `${configStore.bootstrap.api}${CHAT_TELESCOPE}`
 
