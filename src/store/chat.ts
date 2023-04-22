@@ -131,26 +131,19 @@ export const useChatStore = defineStore(
           if (tokens < maxTokens && sum + tokens < maxTokens) {
             sum += tokens
             res.push(item as MessageItem)
-            // console.log(
-            //   `当前聊天: ${item.content}, tokens: ${tokens}, sum: ${sum}`
-            // )
           } else {
-            throw new Error('')
+            throw new Error()
           }
         })
-      } catch (_) {
-        //
+      } catch (error: any) {
+        report({ type: 'error', msg: error?.message || error })
       }
       if (res.length < 1) {
         report({ sum, messages, tokenArray })
       }
       return res.reverse()
     }
-    async function report(data: {
-      sum: number
-      messages: any
-      tokenArray: number[]
-    }) {
+    async function report(data: any) {
       const path = `${configStore.bootstrap.api}${CHAT_TELESCOPE}`
 
       fetch(path, {
@@ -175,8 +168,7 @@ export const useChatStore = defineStore(
       }
       const messages = getRequiredMessages({ role: 'user', content })
       if (messages.length < 1) {
-        const maxTokens = ALL_MODELS_MAX_TOKENS[configStore.chatModel] || 2049
-        Message.error(`消息超出token限制: ${maxTokens}`)
+        Message.error(`超出模型允许的最大字数，请删减字符`)
         return
       }
       const reqData: MessageModel = {
