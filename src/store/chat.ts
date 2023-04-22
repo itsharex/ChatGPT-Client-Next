@@ -155,7 +155,7 @@ export const useChatStore = defineStore(
       const resMessages = sum < 1 ? messages : res
       // 如果> 40条消息 截断
       if (resMessages.length > 20) {
-        return resMessages.splice(0, 19)
+        return resMessages.splice(0, 20)
       }
       // 翻转数据  需要将最新的方法 最后
       return resMessages.reverse()
