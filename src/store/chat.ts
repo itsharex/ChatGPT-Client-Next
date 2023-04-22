@@ -192,6 +192,7 @@ export const useChatStore = defineStore(
       const reqData: MessageModel = {
         card: configStore.cardInfo?.enable ? configStore.card : undefined,
         messages,
+        temperature: configStore.temperature,
         model: configStore.chatModel,
         is_stream: true
       }
