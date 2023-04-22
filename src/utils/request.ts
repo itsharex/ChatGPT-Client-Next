@@ -104,6 +104,7 @@ export async function requestChatStream(
 export async function requestDrawImage(
   sendData: any,
   options?: {
+    onSuccess: (data: { created: number; data: { url: string }[] }) => void
     onError: (error: Error, statusCode?: number) => void
     onController?: (controller: AbortController) => void
   }
@@ -112,7 +113,7 @@ export async function requestDrawImage(
   const reqTimeoutId = setTimeout(() => controller.abort(), 180000)
   try {
     const configStore = useConfigStore()
-    const path = `${configStore.bootstrap.api}${CHAT_COMPLETIONS}`
+    const path = `${configStore.bootstrap.api}${IMAGES_GENERATIONS}`
     const res = await fetch(path, {
       method: 'POST',
       headers: {
@@ -123,39 +124,16 @@ export async function requestDrawImage(
     })
     clearTimeout(reqTimeoutId)
 
-    const responseText = ''
-
-    const finish = () => {
-      // options?.onMessage(responseText, true)
-      controller.abort()
-    }
-
     if (res.ok) {
-      console.log(res)
-      // const decoder = new TextDecoder()
-
-      // options?.onController?.(controller)
-
-      // // eslint-disable-next-line no-constant-condition
-      // while (true) {
-      //   // handle time out, will stop if no response in 10 secs
-      //   const resTimeoutId = setTimeout(() => finish(), TIME_OUT_MS)
-      //   const content = await reader?.read()
-      //   clearTimeout(resTimeoutId)
-      //   const text = decoder.decode(content?.value)
-      //   responseText += text
-      //   const done = !content || content.done
-      //   options?.onMessage(responseText, false)
-      //   if (done) {
-      //     break
-      //   }
-      // }
-      // finish()
+      const resp = await res.json()
+      console.log(resp)
+      // {"created":1682176988,"data":[{"url":""}]}
+      options?.onSuccess(resp)
     } else if (res.status === 401) {
       console.error('Anauthorized')
       options?.onError(new Error('Anauthorized'), res.status)
     } else if (res.status === 500) {
-      const text = await res.text()
+      const text = await res.json()
       options?.onError(new Error(text), res.status)
     } else {
       console.error('Stream Error', res.body)

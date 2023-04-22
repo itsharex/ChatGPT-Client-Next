@@ -1,11 +1,12 @@
 <script setup lang="ts">
+const { isMobileScreen } = useWindowSize()
+
 import { chunk } from 'lodash-es'
 
 import { useDrawStore } from '@/store/draw'
 
 const formState = reactive({
-  prompt:
-    '一只白色的暹罗猫的摄影棚风的的近距离照，它看起来很好奇并且有光从它的耳朵处透过',
+  prompt: '',
   size: '256x256',
   n: 1,
   response_format: 'url'
@@ -25,9 +26,9 @@ const handleChangeKeyword = () => {
 const drawStore = useDrawStore()
 
 const handleDrawImage = () => {
-  return
   drawStore.imageDrawAction(formState)
 }
+const draws = computed(() => drawStore.draws)
 </script>
 
 <template>
@@ -35,7 +36,7 @@ const handleDrawImage = () => {
     outer-style="flex: 1; overflow: hidden;"
     class="overflow-y-auto h-full p-4 flex flex-col gap-y-2"
   >
-    <div class="draw-view">
+    <div class="draw-view" :class="{ 'is-mobile': isMobileScreen }">
       <a-alert type="info" class="max-w-max mx-auto rounded-full text-xs">
         <template #icon>
           <icon-exclamation-circle-fill />
@@ -78,22 +79,62 @@ const handleDrawImage = () => {
 
       <a-form
         :model="formState"
-        auto-label-width
+        :class="{ 'is-mobile': isMobileScreen }"
+        :label-col-props="{ span: isMobileScreen ? 24 : undefined }"
+        :auto-label-width="!isMobileScreen"
         label-align="left"
         class="mt-4 p-4 bg-light-300 dark:bg-dark-900 rounded"
       >
         <a-typography-text class="block" bold> 参数设置 </a-typography-text>
         <a-form-item label="图片尺寸" class="mb-2">
-          <a-radio-group v-model="formState.size" type="button">
-            <a-radio value="256x256">256x256(小图)</a-radio>
-            <a-radio value="512x512">512x512(中图)</a-radio>
-            <a-radio value="1024x1024">1024x1024(大图)</a-radio>
-          </a-radio-group>
+          <!-- <a-radio-group v-model="formState.size" type="button"> -->
+          <div
+            class="w-full"
+            :class="{ 'grid grid-cols-2 gap-y-2': isMobileScreen }"
+          >
+            <a-radio
+              class="min-w-max"
+              v-model="formState.size"
+              type="button"
+              value="256x256"
+            >
+              256x256(小图)
+            </a-radio>
+            <a-radio
+              class="min-w-max"
+              v-model="formState.size"
+              type="button"
+              value="512x512"
+            >
+              512x512(中图)
+            </a-radio>
+            <a-radio
+              class="min-w-max"
+              v-model="formState.size"
+              type="button"
+              value="1024x1024"
+            >
+              1024x1024(大图)
+            </a-radio>
+          </div>
+          <!-- </a-radio-group> -->
         </a-form-item>
         <a-form-item label="图片数量" class="mb-2">
-          <a-radio-group v-model="formState.n" type="button">
-            <a-radio v-for="i in 10" :key="i" :value="i"> {{ i }}张 </a-radio>
-          </a-radio-group>
+          <div
+            class="w-full"
+            :class="{ 'grid grid-cols-5 gap-y-2': isMobileScreen }"
+          >
+            <a-radio
+              class="min-w-max"
+              v-model="formState.n"
+              type="button"
+              v-for="i in 10"
+              :key="i"
+              :value="i"
+            >
+              {{ i }}张
+            </a-radio>
+          </div>
         </a-form-item>
         <!-- <a-divider></a-divider>
         <a-form-item label="修饰词参考" class="mb-2" justify="start">
@@ -108,7 +149,49 @@ const handleDrawImage = () => {
           </a-typography-paragraph>
         </a-form-item> -->
       </a-form>
-      <div class="h-96"></div>
+      <a-tabs class="mt-6" type="capsule">
+        <a-tab-pane key="1" title="我的作品">
+          <a-collapse :default-active-key="[1]" accordion>
+            <a-collapse-item v-for="item in draws" :key="item.date">
+              <template #extra>
+                <a-tag color="red" size="small">{{ item.urls.length }}张</a-tag>
+              </template>
+              <template #header>
+                <div class="flex flex-col gap-y-1 select-none">
+                  <a-typography-paragraph
+                    class="mb-0"
+                    :ellipsis="{ rows: 1, expandable: true }"
+                  >
+                    {{ item.prompt }}
+                  </a-typography-paragraph>
+                  <small
+                    :style="{ color: 'var(--color-text-3)' }"
+                    v-date-time="item.date * 1000"
+                  ></small>
+                </div>
+              </template>
+
+              <a-image-preview-group infinite>
+                <div
+                  class="grid gap-3"
+                  :class="[isMobileScreen ? 'grid-cols-2' : 'grid-cols-5']"
+                >
+                  <a-image v-for="url in item.urls" :key="url" :src="url" />
+                </div>
+              </a-image-preview-group>
+              <a-alert
+                type="info"
+                class="max-w-max mx-auto rounded-full text-xs my-4"
+              >
+                <template #icon>
+                  <icon-exclamation-circle-fill />
+                </template>
+                尺寸: {{ item.size }}
+              </a-alert>
+            </a-collapse-item>
+          </a-collapse>
+        </a-tab-pane>
+      </a-tabs>
     </div>
   </a-scrollbar>
 </template>
@@ -116,5 +199,30 @@ const handleDrawImage = () => {
 <style scoped lang="less">
 .draw-view {
   @apply max-w-4xl w-full mx-auto bg-white dark:bg-dark p-10 rounded-lg shadow-lg;
+  &.is-mobile {
+    @apply p-4;
+    :deep(.arco-radio-button) {
+      &::before {
+        display: none;
+      }
+    }
+  }
+  :deep(.arco-tabs-nav-tab) {
+    @apply justify-start;
+    .arco-tabs-nav-tab-list {
+      width: auto !important;
+    }
+  }
+  :deep(.arco-image) {
+    @apply w-full;
+    .arco-image-img {
+      @apply w-full object-cover;
+    }
+  }
+  :deep(.arco-collapse) {
+    .arco-collapse-item-header-title {
+      //
+    }
+  }
 }
 </style>

@@ -65,10 +65,10 @@ const handleToRouter = (path: string) => {
           <template #icon><icon-message /></template>
           聊天
         </a-menu-item>
-        <!-- <a-menu-item key="Draw">
+        <a-menu-item key="Draw">
           <template #icon><icon-pen-fill /></template>
           绘图
-        </a-menu-item> -->
+        </a-menu-item>
         <!-- <a-menu-item key="Tools">
           <template #icon><icon-apps /></template>
           工具
@@ -95,10 +95,14 @@ const handleToRouter = (path: string) => {
         <div
           :class="[
             'flex flex-nowrap overflow-hidden transition-all',
-            layoutStore.headerSettingCollapsed ? 'w-[26.5rem]' : 'w-0'
+            layoutStore.headerSettingCollapsed
+              ? $route.name !== 'Draw'
+                ? 'w-[26.5rem]'
+                : 'w-60'
+              : 'w-0'
           ]"
         >
-          <ChangeChatModel class="w-44 mr-2" />
+          <ChangeChatModel v-if="$route.name !== 'Draw'" class="w-44 mr-2" />
           <SetupCard class="w-60" />
         </div>
       </a-input-group>
