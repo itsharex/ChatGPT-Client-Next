@@ -138,7 +138,6 @@ export const useChatStore = defineStore(
       } catch (_) {
         //
       }
-      console.log('最终Sum: ', sum)
       return res.reverse()
     }
 
@@ -199,9 +198,10 @@ export const useChatStore = defineStore(
         },
         onError(error: Error, statusCode?: number) {
           fetching.value = false
-          if (statusCode === 401) {
-            getMessageById(botMessage.id).content =
-              '现在是未授权状态，请输入积分卡'
+          if (error?.name === 'AbortError') {
+            // 手动停止, 不做content操作
+          } else if (statusCode === 401) {
+            getMessageById(botMessage.id).content = '请输入积分卡'
           } else {
             getMessageById(botMessage.id).content +=
               statusCode !== undefined
