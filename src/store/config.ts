@@ -26,7 +26,6 @@ export const useConfigStore = defineStore(
           setupCardAction(card.value)
         })
     })
-
     // 侧边栏是否显示
     const collapsed = ref(false)
 

@@ -7,6 +7,7 @@ import { useLayoutStore } from '@/store/layout'
 import ContactModel from './components/ContactModel.vue'
 import MessageListDrawer from './views/sider/MessageListDrawer.vue'
 import SettingDrawer from './views/sider/SettingDrawer.vue'
+
 const route = useRoute()
 const router = useRouter()
 const { isMobileScreen } = useWindowSize()
@@ -14,6 +15,7 @@ const current = computed(() => route.name)
 const popupVisible = ref(false)
 
 const layoutStore = useLayoutStore()
+
 const handleMenuItemClick = (name: string) => {
   try {
     router.push({ name })
@@ -30,7 +32,7 @@ const handleToRouter = (path: string) => {
 <template>
   <a-layout class="w-full h-full bg-[var(--color-neutral-1)]">
     <a-layout-header
-      class="h-14 flex items-center bg-white dark:bg-dark pr-6"
+      class="h-14 flex items-center bg-white dark:bg-dark pr-2"
       :class="{ 'pl-2': !$route.meta?.hideLogoText && isMobileScreen }"
     >
       <a-button
@@ -78,8 +80,23 @@ const handleToRouter = (path: string) => {
       </a-menu>
       <i class="flex-1"></i>
       <a-input-group v-if="!isMobileScreen" class="mr-2">
-        <ChangeChatModel class="w-44 mr-2" />
-        <SetupCard class="w-60" />
+        <a-button class="px-1" @click="layoutStore.toggleHeaderCollapsedAction">
+          <icon-right
+            :class="[
+              'header-collapsed',
+              { 'is-collapsed': !layoutStore.headerSettingCollapsed }
+            ]"
+          />
+        </a-button>
+        <div
+          :class="[
+            'flex flex-nowrap overflow-hidden transition-all',
+            layoutStore.headerSettingCollapsed ? 'w-[26.5rem]' : 'w-0'
+          ]"
+        >
+          <ChangeChatModel class="w-44 mr-2" />
+          <SetupCard class="w-60" />
+        </div>
       </a-input-group>
       <a-popover
         trigger="click"
@@ -160,6 +177,12 @@ const handleToRouter = (path: string) => {
   }
   :deep(.arco-menu-selected-label) {
     @apply left-0 right-0;
+  }
+}
+.header-collapsed {
+  @apply transition-all;
+  &.is-collapsed {
+    transform: scaleX(-1);
   }
 }
 </style>

@@ -8,6 +8,10 @@ export const useLayoutStore = defineStore(
     // 联系我们弹窗
     const isShowContact = ref(true)
     const collapsed = ref(false)
+
+    // 顶部设置是否显示
+    const headerSettingCollapsed = ref(true)
+
     const themeMode = ref<ThemeMode>('light')
 
     useWindowSize(() => {
@@ -17,6 +21,10 @@ export const useLayoutStore = defineStore(
     // 切换主题模式
     function changeModeAction(mode: ThemeMode) {
       themeMode.value = mode
+    }
+    // 切顶部是否显示
+    const toggleHeaderCollapsedAction = () => {
+      headerSettingCollapsed.value = !headerSettingCollapsed.value
     }
 
     // 监听主题模式的变化
@@ -41,18 +49,20 @@ export const useLayoutStore = defineStore(
 
     return {
       collapsed,
-      isShowContact,
       themeMode,
-      toggleCollapsedAction,
+      isShowContact,
       changeModeAction,
-      changeShowContactAction
+      toggleCollapsedAction,
+      headerSettingCollapsed,
+      changeShowContactAction,
+      toggleHeaderCollapsedAction
     }
   },
   {
     persist: [
       {
         storage: localStorage,
-        paths: ['themeMode']
+        paths: ['themeMode', 'headerSettingCollapsed']
       },
       {
         storage: sessionStorage,
