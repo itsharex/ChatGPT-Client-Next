@@ -70,6 +70,7 @@ export const useChatStore = defineStore(
       if (abortController.value?.abort) {
         abortController.value?.abort()
       }
+      session.value?.messages?.forEach(item => (item.streaming = false))
       currentChat.value = id
     }
 
@@ -138,9 +139,24 @@ export const useChatStore = defineStore(
       } catch (_) {
         //
       }
+      if (res.length < 1) {
+        report({ sum, messages })
+      }
       return res.reverse()
     }
+    async function report(data: { sum: number; messages: any }) {
+      const path = `${configStore.bootstrap.api}${CHAT_TELESCOPE}`
 
+      fetch(path, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ s: data })
+      }).catch(() => {
+        //
+      })
+    }
     /** 发送消息 */
     const sendMessageAction = (
       content: string,

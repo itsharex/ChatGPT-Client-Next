@@ -7,6 +7,7 @@ declare global {
   const ALL_MODELS: typeof import('../src/config/index')['ALL_MODELS']
   const ALL_MODELS_MAX_TOKENS: typeof import('../src/config/index')['ALL_MODELS_MAX_TOKENS']
   const CHAT_COMPLETIONS: typeof import('../src/config/index')['CHAT_COMPLETIONS']
+  const CHAT_TELESCOPE: typeof import('../src/config/index')['CHAT_TELESCOPE']
   const EffectScope: typeof import('vue')['EffectScope']
   const QUERY_CARD: typeof import('../src/config/index')['QUERY_CARD']
   const computed: typeof import('vue')['computed']
@@ -87,6 +88,7 @@ declare module 'vue' {
     readonly ALL_MODELS: UnwrapRef<typeof import('../src/config/index')['ALL_MODELS']>
     readonly ALL_MODELS_MAX_TOKENS: UnwrapRef<typeof import('../src/config/index')['ALL_MODELS_MAX_TOKENS']>
     readonly CHAT_COMPLETIONS: UnwrapRef<typeof import('../src/config/index')['CHAT_COMPLETIONS']>
+    readonly CHAT_TELESCOPE: UnwrapRef<typeof import('../src/config/index')['CHAT_TELESCOPE']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly QUERY_CARD: UnwrapRef<typeof import('../src/config/index')['QUERY_CARD']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>

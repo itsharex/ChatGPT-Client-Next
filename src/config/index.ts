@@ -62,8 +62,11 @@ export const ALL_MODELS_MAX_TOKENS: Record<ChatModel, number> = {
 export const genTitleTemplate =
   '使用四到五个字直接返回这句话的简要主题，不要解释、不要标点、不要语气词、不要多余文本，如果没有主题，请直接返回“闲聊”'
 
-/** 聊天接口 */
+/** POST 聊天接口 */
 export const CHAT_COMPLETIONS = '/v1/chat/completions'
 
-/** 查询卡密积分 */
+/** POST 上报日志 */
+export const CHAT_TELESCOPE = '/v1/telescope'
+
+/** GET 查询卡密积分 */
 export const QUERY_CARD = '/v1/card'
