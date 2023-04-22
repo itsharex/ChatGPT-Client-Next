@@ -7,6 +7,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { ArcoResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig, loadEnv } from 'vite'
+import viteCompression from 'vite-plugin-compression'
 import { qrcode } from 'vite-plugin-qrcode'
 import WindiCSS from 'vite-plugin-windicss'
 
@@ -40,6 +41,9 @@ export default defineConfig(({ mode }) => {
         dirs: ['./src/components'],
         dts: 'typings/components.d.ts',
         resolvers: [ArcoResolver({ importStyle: 'less' })]
+      }),
+      viteCompression({
+        threshold: 1024000 // 对大于 1mb 的文件进行压缩
       })
     ],
     css: {
@@ -89,6 +93,32 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url))
+      }
+    },
+    build: {
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true
+        }
+      },
+      rollupOptions: {
+        output: {
+          chunkFileNames: 'static/js/[name]-[hash].js',
+          entryFileNames: 'static/js/[name]-[hash].js',
+          assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+          manualChunks(id) {
+            // 静态资源分拆打包
+            if (id.includes('node_modules')) {
+              return id
+                .toString()
+                .split('node_modules/')[1]
+                .split('/')[0]
+                .toString()
+            }
+          }
+        }
       }
     }
   }
