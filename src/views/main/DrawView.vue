@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const { isMobileScreen } = useWindowSize()
 
+import { Message } from '@arco-design/web-vue'
 import { chunk } from 'lodash-es'
 
 import { useDrawStore } from '@/store/draw'
@@ -24,8 +25,13 @@ const handleChangeKeyword = () => {
 }
 
 const drawStore = useDrawStore()
+const loading = computed(() => drawStore.loading)
 
 const handleDrawImage = () => {
+  if (formState.prompt.trim().length < 1) {
+    Message.error('关键词不能为空')
+    return
+  }
   drawStore.imageDrawAction(formState)
 }
 const draws = computed(() => drawStore.draws)
@@ -63,6 +69,7 @@ const draws = computed(() => drawStore.draws)
         </a-typography-paragraph>
       </div>
       <a-input-search
+        :loading="loading"
         class="w-full mb-6 mt-4"
         size="large"
         autofocus
@@ -149,7 +156,7 @@ const draws = computed(() => drawStore.draws)
           </a-typography-paragraph>
         </a-form-item> -->
       </a-form>
-      <a-tabs class="mt-6" type="capsule">
+      <a-tabs v-if="draws.length" class="mt-6" type="capsule">
         <a-tab-pane key="1" title="我的作品">
           <a-collapse :default-active-key="[1]" accordion>
             <a-collapse-item v-for="item in draws" :key="item.date">

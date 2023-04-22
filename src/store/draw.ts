@@ -9,6 +9,7 @@ export const useDrawStore = defineStore(
   '__AI_1024_STORE_DRAW',
   () => {
     const configStore = useConfigStore()
+    const loading = ref(false)
     const draws = ref<
       {
         prompt: string
@@ -25,7 +26,7 @@ export const useDrawStore = defineStore(
       n: number
       response_format: string
     }) => {
-      alert('imageDrawAction')
+      loading.value = true
       requestDrawImage(
         { ...req, card: configStore.card },
         {
@@ -33,6 +34,7 @@ export const useDrawStore = defineStore(
             console.log(controller)
           },
           onSuccess(resp) {
+            loading.value = false
             draws.value.push({
               prompt: req.prompt,
               size: req.size,
@@ -41,6 +43,7 @@ export const useDrawStore = defineStore(
             })
           },
           onError(error) {
+            loading.value = false
             Message.error(error?.message ?? '')
           }
         }
@@ -48,6 +51,7 @@ export const useDrawStore = defineStore(
     }
     return {
       draws,
+      loading,
       imageDrawAction
     }
   },

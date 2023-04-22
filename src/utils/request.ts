@@ -127,8 +127,12 @@ export async function requestDrawImage(
     if (res.ok) {
       const resp = await res.json()
       console.log(resp)
-      // {"created":1682176988,"data":[{"url":""}]}
-      options?.onSuccess(resp)
+      if (resp.code === 500) {
+        options?.onError(new Error(resp.msg), resp.code)
+      } else {
+        // {"created":1682176988,"data":[{"url":""}]}
+        options?.onSuccess(resp)
+      }
     } else if (res.status === 401) {
       console.error('Anauthorized')
       options?.onError(new Error('Anauthorized'), res.status)

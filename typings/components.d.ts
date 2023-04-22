@@ -17,8 +17,6 @@ declare module '@vue/runtime-core' {
     AButton: typeof import('@arco-design/web-vue')['Button']
     AButtonGroup: typeof import('@arco-design/web-vue')['ButtonGroup']
     ACard: typeof import('@arco-design/web-vue')['Card']
-    ACarousel: typeof import('@arco-design/web-vue')['Carousel']
-    ACarouselItem: typeof import('@arco-design/web-vue')['CarouselItem']
     ACollapse: typeof import('@arco-design/web-vue')['Collapse']
     ACollapseItem: typeof import('@arco-design/web-vue')['CollapseItem']
     ADescriptions: typeof import('@arco-design/web-vue')['Descriptions']
