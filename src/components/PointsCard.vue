@@ -10,10 +10,8 @@ const setupCardLoading = computed(() => configStore.setupCardLoading)
   <a-card class="points-card" :loading="setupCardLoading" :bordered="false">
     <a-descriptions size="mini" :column="1">
       <a-descriptions-item label="账号">
-        <span
-          class="flex items-center gap-x-4"
-          :class="[configStore.cardInfo ? 'text-primary' : 'text-danger']"
-        >
+        <!-- :class="[configStore.cardInfo ? 'text-primary' : 'text-danger']" -->
+        <span class="flex items-center gap-x-4 text-primary">
           <span>{{ configStore.cardInfo ? '会员' : '游客' }}</span>
           <a-button
             size="mini"
@@ -28,7 +26,7 @@ const setupCardLoading = computed(() => configStore.setupCardLoading)
       <a-descriptions-item label="状态">
         <a-badge
           size="small"
-          :status="configStore.cardInfo?.enable ? 'processing' : 'danger'"
+          status="processing"
           :text="
             configStore.cardInfo
               ? configStore.cardInfo?.enable
@@ -61,6 +59,10 @@ const setupCardLoading = computed(() => configStore.setupCardLoading)
     @apply dark:bg-dark mx-auto;
     background-color: #f2f3f5;
     width: calc(100% - 16px) !important;
+
+    :deep(.arco-descriptions-item-value) {
+      padding-right: 0;
+    }
   }
 }
 </style>

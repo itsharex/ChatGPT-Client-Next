@@ -39,7 +39,7 @@ const handleCommand = (command: ICommand, id?: string) => {
 </script>
 
 <template>
-  <a-layout-sider :width="240" class="chat-message_list">
+  <a-layout-sider :width="200" class="chat-message_list">
     <div class="h-full flex flex-col items-stretch overflow-hidden">
       <div class="h-14 flex items-center px-2 gap-x-2 bg-white dark:bg-dark">
         <a-button
@@ -99,7 +99,9 @@ const handleCommand = (command: ICommand, id?: string) => {
       </a-scrollbar>
       <ADivider class="my-2" />
       <PointsCard class="is-chat"></PointsCard>
-      <div class="flex items-center justify-between p-4 bg-white dark:bg-dark">
+      <div
+        class="flex items-center justify-between p-4 bg-white dark:bg-dark text-sm"
+      >
         <a-link type="primary" @click="chatStore.clearSessions">
           <template #icon><icon-robot-add /></template>
           清除会话

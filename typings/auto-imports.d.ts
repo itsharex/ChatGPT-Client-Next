@@ -10,6 +10,7 @@ declare global {
   const DRAW_PROMPT: typeof import('../src/config/index')['DRAW_PROMPT']
   const EffectScope: typeof import('vue')['EffectScope']
   const IMAGES_GENERATIONS: typeof import('../src/config/index')['IMAGES_GENERATIONS']
+  const POINTS_MAP: typeof import('../src/config/index')['POINTS_MAP']
   const QUERY_CARD: typeof import('../src/config/index')['QUERY_CARD']
   const computed: typeof import('vue')['computed']
   const copyText: typeof import('../src/utils/copy')['copyText']
@@ -93,6 +94,7 @@ declare module 'vue' {
     readonly DRAW_PROMPT: UnwrapRef<typeof import('../src/config/index')['DRAW_PROMPT']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly IMAGES_GENERATIONS: UnwrapRef<typeof import('../src/config/index')['IMAGES_GENERATIONS']>
+    readonly POINTS_MAP: UnwrapRef<typeof import('../src/config/index')['POINTS_MAP']>
     readonly QUERY_CARD: UnwrapRef<typeof import('../src/config/index')['QUERY_CARD']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly copyText: UnwrapRef<typeof import('../src/utils/copy')['copyText']>

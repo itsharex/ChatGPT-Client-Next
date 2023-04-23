@@ -186,7 +186,7 @@ const placeholder = computed(() => {
 </script>
 
 <template>
-  <a-layout-header
+  <!-- <a-layout-header
     class="h-14 px-4 flex items-center gap-x-3 bg-white dark:bg-dark"
   >
     <div
@@ -205,7 +205,7 @@ const placeholder = computed(() => {
     <i class="flex-1" v-if="!isMobileScreen"></i>
     <DownloadSession v-if="session?.messages?.length"></DownloadSession>
   </a-layout-header>
-  <a-divider class="m-0" />
+  <a-divider class="m-0" /> -->
   <a-layout-content class="flex flex-col flex-1 overflow-hidden">
     <main class="chat-wrapper">
       <a-scrollbar

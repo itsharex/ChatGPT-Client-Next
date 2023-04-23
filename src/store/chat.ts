@@ -114,7 +114,7 @@ export const useChatStore = defineStore(
     }
 
     /** 获取需要携带的消息 */
-    const getRequiredMessages = (curr: Partial<MessageItem>) => {
+    const getRequiredMessages = async (curr: Partial<MessageItem>) => {
       // 最大token
       const maxTokens = ALL_MODELS_MAX_TOKENS[configStore.chatModel] || 2049
       // 保存返回结果
@@ -127,6 +127,22 @@ export const useChatStore = defineStore(
       )
 
       if (messages.length > 20) {
+        // await new Promise<void>((resolve, reject) => {
+        //   Modal.warning({
+        //     title: '提示',
+        //     okText: '继续',
+        //     hideCancel: false,
+        //     content:
+        //       '内容超出限制，已经帮您自动截断，将不会携带完整的历史信息,可以尝试新开会话，以减少历史聊天的携带。如果继续发送AI也许不会联系上下文回答您的问题，确定要继续发送吗？',
+        //     onOk() {
+        //       resolve()
+        //     },
+        //     onCancel() {
+        //       reject()
+        //       throw new Error('cancel send')
+        //     }
+        //   })
+        // })
         return messages.slice(messages.length - 20, messages.length)
       }
       return messages
@@ -167,7 +183,7 @@ export const useChatStore = defineStore(
     }
 
     /** 发送消息 */
-    const sendMessageAction = (
+    const sendMessageAction = async (
       content: string,
       onMessage?: (done: boolean) => void,
       appendUserMessage: boolean = true
@@ -176,7 +192,7 @@ export const useChatStore = defineStore(
         Message.error('请输入您的消息')
         return
       }
-      const messages = getRequiredMessages({ role: 'user', content })
+      const messages = await getRequiredMessages({ role: 'user', content })
       // if (messages.length < 1) {
       //   Message.error(`超出模型允许的最大字数，请删减字符`)
       //   return

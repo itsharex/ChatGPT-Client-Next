@@ -97,12 +97,12 @@ const handleToRouter = (path: string) => {
             'flex flex-nowrap overflow-hidden transition-all',
             layoutStore.headerSettingCollapsed
               ? $route.name !== 'Draw'
-                ? 'w-[26.5rem]'
+                ? 'w-[28.5rem]'
                 : 'w-60'
               : 'w-0'
           ]"
         >
-          <ChangeChatModel v-if="$route.name !== 'Draw'" class="w-44 mr-2" />
+          <ChangeChatModel v-if="$route.name !== 'Draw'" class="w-48 mr-2" />
           <SetupCard class="w-60" />
         </div>
       </a-input-group>

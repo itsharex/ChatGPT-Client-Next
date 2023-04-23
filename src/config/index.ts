@@ -21,6 +21,27 @@ export const ALL_MODELS: ChatModel[] = [
   // 'babbage'
 ]
 
+export const POINTS_MAP: Record<ChatModel, number> = {
+  'gpt-4': 100,
+  'gpt-3.5-turbo': 3,
+  'gpt-4-32k-0314': 0,
+  'gpt-4-32k': 0,
+  'gpt-4-0314': 0,
+  'gpt-3.5-turbo-0301': 0,
+  'text-davinci-003': 0,
+  'text-davinci-002': 0,
+  'text-curie-001': 0,
+  'text-babbage-001': 0,
+  'text-ada-001': 0,
+  'text-davinci-001': 0,
+  'davinci-instruct-beta': 0,
+  davinci: 0,
+  'curie-instruct-beta': 0,
+  curie: 0,
+  ada: 0,
+  babbage: 0
+}
+
 // openai.GPT3Dot5Turbo0301:   4096,
 // openai.GPT4:                8192,
 // openai.GPT40314:            8192,

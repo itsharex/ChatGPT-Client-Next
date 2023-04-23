@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import { debounce } from 'lodash-es'
-
 import { useConfigStore } from '@/store/config'
 
 const configStore = useConfigStore()
 const card = ref('')
 const loading = computed(() => configStore.setupCardLoading)
 
-const handleInputCard = debounce((value: string) => {
+const handleInputCard = (value: string) => {
   configStore.setupCardAction(value)
-}, 500)
+}
 
 onMounted(() => {
   card.value = configStore.card
@@ -18,10 +16,10 @@ onMounted(() => {
 
 <template>
   <a-spin :loading="loading">
-    <a-input
+    <a-input-password
       :error="!configStore.cardInfo && !!configStore.card"
       v-model="card"
-      @input="handleInputCard"
+      @blur="handleInputCard"
       allow-clear
       placeholder="请输入积分卡"
     >
@@ -37,7 +35,7 @@ onMounted(() => {
           <icon-info-circle class="cursor-pointer text-danger" />
         </a-tooltip>
       </template>
-    </a-input>
+    </a-input-password>
   </a-spin>
 </template>
 
