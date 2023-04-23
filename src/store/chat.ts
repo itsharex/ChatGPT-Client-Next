@@ -125,6 +125,11 @@ export const useChatStore = defineStore(
       const messages = cloneDeep(sMs.concat(curr as MessageItem)).map(
         ({ role, content }) => ({ role, content })
       )
+
+      if (messages.length > 20) {
+        return messages.slice(messages.length - 20, messages.length)
+      }
+      return messages
       // token数量  循环一次 加一次
       let sum = 0
       const tokensArray: number[] = []
@@ -172,10 +177,10 @@ export const useChatStore = defineStore(
         return
       }
       const messages = getRequiredMessages({ role: 'user', content })
-      if (messages.length < 1) {
-        Message.error(`超出模型允许的最大字数，请删减字符`)
-        return
-      }
+      // if (messages.length < 1) {
+      //   Message.error(`超出模型允许的最大字数，请删减字符`)
+      //   return
+      // }
       const reqData: MessageModel = {
         card: configStore.cardInfo?.enable ? configStore.card : undefined,
         messages,

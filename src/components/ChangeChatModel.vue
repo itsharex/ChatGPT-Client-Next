@@ -23,6 +23,8 @@ const handleChangeMode = (value: string | number | Record<string, any>) => {
       ),
       closable: true
     })
+  } else {
+    Notification.clear()
   }
   configStore.changeChatModelAction(value as ChatModel)
 }

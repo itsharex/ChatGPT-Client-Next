@@ -227,7 +227,7 @@ const placeholder = computed(() => {
             class="flex items-center gap-x-4"
             :class="{ 'flex-row-reverse': item.role !== 'assistant' }"
           >
-            <a-spin :loading="item.streaming && item.role === 'assistant'">
+            <a-spin v-if="item.role === 'assistant'" :loading="item.streaming">
               <a-avatar
                 :size="32"
                 :class="

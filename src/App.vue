@@ -65,10 +65,10 @@ const handleToRouter = (path: string) => {
           <template #icon><icon-message /></template>
           聊天
         </a-menu-item>
-        <a-menu-item key="Draw">
+        <!-- <a-menu-item key="Draw">
           <template #icon><icon-pen-fill /></template>
           绘图
-        </a-menu-item>
+        </a-menu-item> -->
         <!-- <a-menu-item key="Tools">
           <template #icon><icon-apps /></template>
           工具
