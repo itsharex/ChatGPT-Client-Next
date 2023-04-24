@@ -1,4 +1,6 @@
-<script setup lang="ts" :inheritAttrs="false"></script>
+<script setup lang="ts" :inheritAttrs="false">
+const { VITE_FEATURES } = import.meta.env
+</script>
 
 <template>
   <a-scrollbar
@@ -57,17 +59,30 @@
       <a-button
         type="primary"
         shape="round"
+        class="px-8"
+        v-if="VITE_FEATURES.includes('CHAT')"
         @click="$router.push({ name: 'Chat' })"
       >
         开启GPT互动
       </a-button>
-      <!-- <a-button
+      <a-button
         type="outline"
         shape="round"
+        class="px-8"
+        v-if="VITE_FEATURES.includes('DRAW')"
+        @click="$router.push({ name: 'Draw' })"
+      >
+        绘图
+      </a-button>
+      <a-button
+        type="outline"
+        shape="round"
+        class="px-8"
+        v-if="VITE_FEATURES.includes('TOOLS')"
         @click="$router.push({ name: 'Tools' })"
       >
-        AI实用工具箱
-      </a-button> -->
+        工具
+      </a-button>
     </div>
   </a-scrollbar>
 </template>

@@ -27,4 +27,6 @@ declare interface ViteEnv {
   VITE_DROP_CONSOLE: boolean
   // 本地存储Key前缀
   VITE_STORE_PREFIX: string
+  // 开启功能列表
+  VITE_FEATURES: string
 }

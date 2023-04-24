@@ -38,7 +38,9 @@ export const useDrawStore = defineStore(
             draws.value.push({
               prompt: req.prompt,
               size: req.size,
-              urls: resp.data.map(item => item.url),
+              urls: resp.data.map(
+                item => `data:image/png;base64, ${item.b64_json}`
+              ),
               date: resp.created
             })
           },

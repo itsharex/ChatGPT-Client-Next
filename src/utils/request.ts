@@ -104,13 +104,16 @@ export async function requestChatStream(
 export async function requestDrawImage(
   sendData: any,
   options?: {
-    onSuccess: (data: { created: number; data: { url: string }[] }) => void
+    onSuccess: (data: {
+      created: number
+      data: { url: string; b64_json: string }[]
+    }) => void
     onError: (error: Error, statusCode?: number) => void
     onController?: (controller: AbortController) => void
   }
 ) {
   const controller = new AbortController()
-  const reqTimeoutId = setTimeout(() => controller.abort(), 180000)
+  const reqTimeoutId = setTimeout(() => controller.abort(), 300000)
   try {
     const configStore = useConfigStore()
     const path = `${configStore.bootstrap.api}${IMAGES_GENERATIONS}`
@@ -126,7 +129,6 @@ export async function requestDrawImage(
 
     if (res.ok) {
       const resp = await res.json()
-      console.log(resp)
       if (resp.code === 500) {
         options?.onError(new Error(resp.msg), resp.code)
       } else {

@@ -1,52 +1,64 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+
+const { VITE_FEATURES } = import.meta.env
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Home',
+    components: {
+      default: () => import('../views/HomeView.vue')
+    },
+    meta: {
+      hideSetup: true,
+      hideLogoText: true
+    }
+  },
+  {
+    path: '/tutorial',
+    name: 'Tutorial',
+    component: () => import('@/views/main/TutorialView.vue')
+  },
+  // {
+  //   path: '/settings',
+  //   name: 'Settings',
+  //   component: () => import('@/views/main/SettingsView.vue')
+  // },
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('@/views/main/AboutView.vue')
+  }
+]
+if (VITE_FEATURES.includes('CHAT')) {
+  routes.push({
+    path: '/chat',
+    name: 'Chat',
+    components: {
+      sider: () => import('../views/sider/MessageList.vue'),
+      default: () => import('../views/main/ChatView.vue')
+    }
+  })
+}
+
+if (VITE_FEATURES.includes('TOOLS')) {
+  routes.push({
+    path: '/tools',
+    name: 'Tools',
+    component: () => import('@/views/main/ToolsView.vue')
+  })
+}
+
+if (VITE_FEATURES.includes('DRAW')) {
+  routes.push({
+    path: '/draw',
+    name: 'Draw',
+    component: () => import('@/views/main/DrawView.vue')
+  })
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'Home',
-      components: {
-        default: () => import('../views/HomeView.vue')
-      },
-      meta: {
-        hideLogoText: true
-      }
-    },
-    {
-      path: '/chat',
-      name: 'Chat',
-      components: {
-        sider: () => import('../views/sider/MessageList.vue'),
-        default: () => import('../views/main/ChatView.vue')
-      }
-    },
-    {
-      path: '/tools',
-      name: 'Tools',
-      component: () => import('@/views/main/ToolsView.vue')
-    },
-    // {
-    //   path: '/draw',
-    //   name: 'Draw',
-    //   component: () => import('@/views/main/DrawView.vue')
-    // },
-    {
-      path: '/tutorial',
-      name: 'Tutorial',
-      component: () => import('@/views/main/TutorialView.vue')
-    },
-    // {
-    //   path: '/settings',
-    //   name: 'Settings',
-    //   component: () => import('@/views/main/SettingsView.vue')
-    // },
-    {
-      path: '/about',
-      name: 'About',
-      component: () => import('@/views/main/AboutView.vue')
-    }
-  ]
+  routes
 })
 
 export default router

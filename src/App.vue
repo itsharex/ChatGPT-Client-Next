@@ -3,6 +3,7 @@ import { Message } from '@arco-design/web-vue'
 import type { RouterLink } from 'vue-router'
 
 import { useLayoutStore } from '@/store/layout'
+const { VITE_FEATURES } = import.meta.env
 
 import ContactModel from './components/ContactModel.vue'
 import MessageListDrawer from './views/sider/MessageListDrawer.vue'
@@ -61,18 +62,22 @@ const handleToRouter = (path: string) => {
         :selected-keys="[current]"
         class="header-menu"
       >
-        <a-menu-item key="Chat" class="ml-auto">
+        <a-menu-item
+          v-if="VITE_FEATURES.includes('CHAT')"
+          key="Chat"
+          class="ml-auto"
+        >
           <template #icon><icon-message /></template>
           聊天
         </a-menu-item>
-        <!-- <a-menu-item key="Draw">
+        <a-menu-item key="Draw" v-if="VITE_FEATURES.includes('DRAW')">
           <template #icon><icon-pen-fill /></template>
           绘图
-        </a-menu-item> -->
-        <!-- <a-menu-item key="Tools">
+        </a-menu-item>
+        <a-menu-item key="Tools" v-if="VITE_FEATURES.includes('TOOLS')">
           <template #icon><icon-apps /></template>
           工具
-        </a-menu-item> -->
+        </a-menu-item>
         <a-menu-item key="Tutorial">
           <template #icon><icon-question-circle /></template>
           使用说明
@@ -83,7 +88,10 @@ const handleToRouter = (path: string) => {
         </a-menu-item>
       </a-menu>
       <i class="flex-1"></i>
-      <a-input-group v-if="!isMobileScreen" class="mr-2">
+      <a-input-group
+        v-if="!isMobileScreen && !route.meta.hideSetup"
+        class="mr-2"
+      >
         <a-button class="px-1" @click="layoutStore.toggleHeaderCollapsedAction">
           <icon-right
             :class="[

@@ -66,6 +66,7 @@ declare global {
   const triggerRef: typeof import('vue')['triggerRef']
   const unref: typeof import('vue')['unref']
   const useAttrs: typeof import('vue')['useAttrs']
+  const useBeforeunload: typeof import('../src/hooks/useBeforeunload')['useBeforeunload']
   const useCopyCode: typeof import('../src/hooks/useCopyCode')['useCopyCode']
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']
@@ -150,6 +151,7 @@ declare module 'vue' {
     readonly triggerRef: UnwrapRef<typeof import('vue')['triggerRef']>
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
+    readonly useBeforeunload: UnwrapRef<typeof import('../src/hooks/useBeforeunload')['useBeforeunload']>
     readonly useCopyCode: UnwrapRef<typeof import('../src/hooks/useCopyCode')['useCopyCode']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>

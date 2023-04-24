@@ -1,16 +1,18 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 const { isMobileScreen } = useWindowSize()
 
-import { Message } from '@arco-design/web-vue'
+import { Message, Modal } from '@arco-design/web-vue'
 import { chunk } from 'lodash-es'
 
+import { useBeforeunload } from '@/hooks/useBeforeunload'
 import { useDrawStore } from '@/store/draw'
 
 const formState = reactive({
   prompt: '',
   size: '256x256',
   n: 1,
-  response_format: 'url'
+  // response_format: 'url'
+  response_format: 'b64_json'
 })
 const drawPromptIndex = ref(0)
 const currentDrawPrompt = computed(
@@ -27,6 +29,25 @@ const handleChangeKeyword = () => {
 const drawStore = useDrawStore()
 const loading = computed(() => drawStore.loading)
 
+useBeforeunload(loading)
+onBeforeRouteLeave(async () => {
+  if (!loading.value) return true
+  return await new Promise<boolean>((resolve, reject) => {
+    Modal.warning({
+      title: '提示',
+      okText: '离开',
+      hideCancel: false,
+      content:
+        'AI已经开始处理您的请求，此时刷新或离开页面，也会造成您的积分扣除，确定刷新或离开吗？',
+      onOk() {
+        resolve(true)
+      },
+      onCancel() {
+        reject(false)
+      }
+    })
+  })
+})
 const handleDrawImage = () => {
   if (formState.prompt.trim().length < 1) {
     Message.error('关键词不能为空')
@@ -70,7 +91,7 @@ const draws = computed(() => drawStore.draws)
       </div>
       <a-input-search
         :loading="loading"
-        class="w-full mb-6 mt-4"
+        class="w-full mt-4"
         size="large"
         autofocus
         v-model="formState.prompt"
@@ -126,7 +147,12 @@ const draws = computed(() => drawStore.draws)
           </div>
           <!-- </a-radio-group> -->
         </a-form-item>
-        <a-form-item label="图片数量" class="mb-2">
+        <a-form-item
+          help="每张图片 20 积分"
+          validate-status="warning"
+          label="图片数量"
+          class="mb-2"
+        >
           <div
             class="w-full"
             :class="{ 'grid grid-cols-5 gap-y-2': isMobileScreen }"
@@ -159,7 +185,7 @@ const draws = computed(() => drawStore.draws)
       <a-tabs v-if="draws.length" class="mt-6" type="capsule">
         <a-tab-pane key="1" title="我的作品">
           <a-collapse :default-active-key="[1]" accordion>
-            <a-collapse-item v-for="item in draws" :key="item.date">
+            <a-collapse-item v-for="item in draws.reverse()" :key="item.date">
               <template #extra>
                 <a-tag color="red" size="small">{{ item.urls.length }}张</a-tag>
               </template>
