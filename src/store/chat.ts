@@ -83,13 +83,13 @@ export const useChatStore = defineStore(
         content: '是否确认移除当前选择会话?',
         onOk() {
           // 如果删除的不是当前选中的 直接删除
-          const index = sessions.value.findIndex(({ id }) => id === id)
+          const index = sessions.value.findIndex(item => item.id === id)
+
           if (id !== currentChat.value) {
             sessions.value.splice(index, 1)
           } else {
             if (sessions.value.length > 1) {
-              currentChat.value =
-                sessions.value[index === 0 ? index + 1 : index - 1].id
+              currentChat.value = sessions.value[0].id
             }
             sessions.value.splice(index, 1)
             if (abortController.value?.abort) {
@@ -267,8 +267,15 @@ export const useChatStore = defineStore(
     /** 初始化判断是否有聊天, 没有创建一个空的 */
     onMounted(() => {
       // sessions.value = []
+      fetching.value = false
       if (sessions.value?.length < 1) {
         newChatAction()
+      } else {
+        sessions.value.forEach(item => {
+          item.messages.forEach(item => {
+            item.streaming = false
+          })
+        })
       }
     })
     return {

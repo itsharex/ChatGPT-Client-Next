@@ -303,6 +303,7 @@ const placeholder = computed(() => {
           停止
         </a-button>
         <a-textarea
+          :readonly="chatStore.fetching"
           v-model="message"
           @keypress="handleEnter"
           class="bg-white dark:bg-dark-900 border-none"
